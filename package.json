@@ -2,9 +2,9 @@
     "name": "E-Learning",
     "version": "1.0.0",
     "description": "",
-    "main": "./src/server.js",
+    "main": "./src/server.ts",
     "scripts": {
-        "start-dev-server": "env-cmd -e development nodemon src/server.js ",
+        "start": "env-cmd -e development ts-node-dev --respawn src/server.ts ",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -13,9 +13,25 @@
     },
     "author": "Harish Rathor (harishrathor)",
     "license": "ISC",
-    "devDependencies": {},
+    "devDependencies": {
+        "@types/compression": "^1.7.1",
+        "@types/cookie-parser": "^1.4.2",
+        "@types/express": "^4.17.13",
+        "@types/helmet": "^4.0.0",
+        "@types/morgan": "^1.9.3",
+        "@types/node": "^16.6.1",
+        "ts-node": "^10.2.0",
+        "ts-node-dev": "^1.1.8"
+    },
     "dependencies": {
-       
+        "body-parser": "^1.19.0",
+        "compression": "^1.7.4",
+        "cookie-parser": "^1.4.5",
+        "env-cmd": "^9.0.1",
+        "express": "^4.17.1",
+        "helmet": "^3.23.3",
+        "module-alias": "^2.2.2",
+        "morgan": "^1.10.0"
     },
     "bugs": {
         "url": "https://github.com/harishrathor/e-learning/issues"
