@@ -1,0 +1,24 @@
+{
+    "name": "E-Learning",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./src/server.js",
+    "scripts": {
+        "start-dev-server": "env-cmd -e development nodemon src/server.js ",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/harishrathor/e-learning.git"
+    },
+    "author": "Harish Rathor (harishrathor)",
+    "license": "ISC",
+    "devDependencies": {},
+    "dependencies": {
+       
+    },
+    "bugs": {
+        "url": "https://github.com/harishrathor/e-learning/issues"
+    },
+    "homepage": "https://github.com/harishrathor/e-learning#readme"
+}
