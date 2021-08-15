@@ -9,7 +9,7 @@ const compression = require('compression');
 import { ObjectType } from '@app-types/index';
 import PATHS from './paths'
 
-class Server {
+export default class Server {
 
     public PATHS: ObjectType | undefined;
     public ENV: any;
@@ -63,8 +63,28 @@ class Server {
         }
     }
 
+    _displayServerInfo() {
+        const { networkInterfaces } = require('os');
+        const nets = networkInterfaces();
+        const results = Object.create(null); // Or just '{}', an empty object
+
+        for (const name of Object.keys(nets)) {
+            for (const net of nets[name]) {
+                // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+                if (net.family === 'IPv4' && !net.internal) {
+                    if (!results[name]) {
+                        results[name] = [];
+                    }
+                    results[name].push(net.address);
+                }
+            }
+        }
+        console.log(results);
+    }
+
     startServer() {
         this._serverInstance = this.APP.listen(process.env.PORT, () => console.log(`Server (${this.ENV}) started at port ${process.env.PORT}. Process id ${process.pid} and Parent process id ${process.ppid}`));
+        this._displayServerInfo();
     }
 
     stopServer() {
@@ -78,16 +98,5 @@ class Server {
     }
 
 }
-
-function startServer() {
-    var server = new Server();
-    globalThis.SERVER = server;
-    server.initialize();
-    server.startServer();
-}
-
-startServer();
-   
-
 
 

@@ -2,9 +2,13 @@
     "name": "E-Learning",
     "version": "1.0.0",
     "description": "",
-    "main": "./src/server.ts",
+    "main": "./src/index.ts",
     "scripts": {
-        "start": "env-cmd -e development ts-node-dev --respawn src/server.ts ",
+        "start": "env-cmd -e development ts-node-dev --respawn src/index.ts ",
+        "start-prod": "ls -l && pwd && env-cmd -e production nodemon dist/index.js",
+        "remove-dist": "if [ -d dist ]; then rm -rf dist; else echo 'dist does not exist'; fi",
+        "build": "tsc",
+        "pwd": "pwd",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -20,8 +24,10 @@
         "@types/helmet": "^4.0.0",
         "@types/morgan": "^1.9.3",
         "@types/node": "^16.6.1",
+        "nodemon": "^2.0.12",
         "ts-node": "^10.2.0",
-        "ts-node-dev": "^1.1.8"
+        "ts-node-dev": "^1.1.8",
+        "typescript": "^4.3.5"
     },
     "dependencies": {
         "body-parser": "^1.19.0",
