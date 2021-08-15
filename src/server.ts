@@ -15,6 +15,7 @@ class Server {
     public ENV: any;
     public CONFIGS: ObjectType;
     public APP: express.Application;
+    public SingletonInstances: ObjectType;
 
     protected _serverInstance: any;
 
@@ -22,6 +23,7 @@ class Server {
     }
 
     initialize() {
+        this.SingletonInstances = {};
         this.PATHS = PATHS;
         this.APP = express();
         this.ENV = process.env.NODE_ENV;
@@ -35,6 +37,14 @@ class Server {
 
     isProduction() {
         return this.ENV === 'production';
+    }
+
+    public setSingletonInstance(className: string, instance: any) {
+        return this.SingletonInstances[className] = instance;
+    }
+
+    public getSingletonInstance(className: string) {
+        return this.SingletonInstances[className]
     }
 
     _initRouting() {
