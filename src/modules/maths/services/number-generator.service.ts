@@ -57,8 +57,9 @@ export default class NumberGeneratorService {
         return {
             minued,
             subtrahend
-        };;
+        };
     }
+
 
     static getInstance() {
         let instance = globalThis.SERVER.getSingletonInstance(NumberGeneratorService.name);

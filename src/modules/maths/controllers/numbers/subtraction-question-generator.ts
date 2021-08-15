@@ -10,7 +10,8 @@ const utilsService = UtilsService.getInstance();
 interface SubtNumbers {
     minued: number;
     subtrahend: number;
-    hasBorrowing?: boolean;
+    correctAnswer: number;
+    options: number[];
 };
 
 export default class SubtractionQuestionGeneratorController extends core.exported.BaseController {
@@ -43,17 +44,37 @@ export default class SubtractionQuestionGeneratorController extends core.exporte
                             map[minued] = {};
                         }
                         map[minued][subtrahend] = 1;
-                        result.push(data);
-                        ++counter;
-                        if (counter == totalCount) {
-                            setTimeout(resolve, 0, result);
-                        } else {
-                            setTimeout(generator, 0, counter);
-                        }
+                        (async () => {
+                            try {
+                                const correctAnswer = minued - subtrahend;
+                              //  console.log('gen', data, correctAnswer);
+                                const options =  await utilsService.generateSimilarNumbers(correctAnswer, 3);
+                                options.push(correctAnswer);
+                                const randomIndex = utilsService.getRandomInt(0, 3);
+                                utilsService.swap(options, randomIndex, options, options.length - 1);
+                                const questionData: SubtNumbers = {
+                                    minued,
+                                    subtrahend,
+                                    correctAnswer,
+                                    options
+                                };
+                                result.push(questionData);
+                                ++counter;
+                                if (counter == totalCount) {
+                                    setTimeout(resolve, 0, result);
+                                } else {
+                                    setTimeout(generator, 0, counter);
+                                }
+                            } catch (error) {
+                                reject(error);
+                                console.log(error);
+                            }
+                        })();
                     }
                 };
                 setTimeout(generator, 0, 0)
             } catch(error) {
+                console.log(error);
                 reject(error);
             }
         });
@@ -79,13 +100,9 @@ export default class SubtractionQuestionGeneratorController extends core.exporte
                 totalQuestions = totalPossible;
             } */
             const questions = await this.generateNumbers(minuedLength, subtrahendLength, hasBorrowing, totalQuestions );
-            console.log('Request2');
-            const result = {
-                hasBorrowing,
-                questions,
-            };
-            this.sendResponse(res, 200, result);
+            this.sendResponse(res, 200, questions);
         } catch(e) {
+            console.log(e);
             this.sendResponse(res, 400, e);
         }
     };

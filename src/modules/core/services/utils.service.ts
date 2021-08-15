@@ -42,6 +42,112 @@ export default class UtilsService {
         return possibilities
     }
 
+    public flipCoin() {  
+        if (Math.floor(Math.random() * 2) == 0) {
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    public async generateSimilarNumbers(n: number, totalCount: string): Promise<number[]> {
+        return new Promise((resolve, reject) => {
+            try {
+                const nStr = n.toString();
+                const map = {};
+                const result = [];
+                const generator = counter => {
+                    try {
+                        let coinResult = this.flipCoin(), min = 1, max = 9;
+                        let randIndex = this.getRandomInt(0, nStr.length);//parseInt((nStr.length / 2).toString())
+                        let refValue = Number(nStr[randIndex]);
+                        if (nStr.length >= 3) {
+                            let minIn = 1;
+                            if (nStr.length >= 4) {
+                                minIn = parseInt((nStr.length / 2).toString());
+                            }
+                            randIndex = this.getRandomInt(minIn, nStr.length);
+                            refValue = Number(nStr[randIndex]);
+                            if (randIndex == 0) {
+                                if (coinResult) { //Add
+                                    if (refValue == 9) {//Re-try
+                                     //   console.log('generateSimilarNumbers', 're-try', 1);
+                                        return setTimeout(generator, 0, counter);
+                                    } else {
+                                        max = 9 - refValue;
+                                        min = 1;
+                                    }
+                                } else { //Subtract
+                                    min = 1;
+                                    max = refValue - 1;
+                                }
+                            } else  {
+                                if (coinResult) { //Add
+                                    if (refValue == 9) {//Re-try
+                                      //  console.log('generateSimilarNumbers', 're-try', 2);
+                                        return setTimeout(generator, 0, counter);
+                                    } else {
+                                        max = 9 - refValue;
+                                        min = 1;
+                                    }
+                                } else {//Subtract
+                                    if (refValue == 0) {//Re-try
+                                     //   console.log('generateSimilarNumbers', 're-try3==>', n, counter + 1,  randIndex, refValue, min, max);
+                                        return setTimeout(generator, 0, counter);
+                                    } else {
+                                        min = 1;
+                                        max = refValue;
+                                    }
+                                }
+                            } 
+                        }
+                        
+                        let randomNumber = this.getRandomInt(min, max);
+                        let positionFromEnd = nStr.length - randIndex - 1;
+                        randomNumber *= UtilsService.E[positionFromEnd];
+                        let newNumber;
+                        if (coinResult) {
+                            newNumber = n + randomNumber;
+                        } else {
+                            newNumber = n - randomNumber;
+                        }
+                        if (map[newNumber] || newNumber < 0) {//Re-try
+                           // console.log('generateSimilarNumbers', 're-try4-->', n, counter + 1,  randIndex, refValue, min, max, newNumber);
+                            setTimeout(generator, 0, counter);
+                        } else {
+                            //console.log('Generated Option: ', n, counter + 1,  randIndex, refValue, min, max, newNumber);
+                            map[newNumber] = 1;
+                            result.push(newNumber);
+                            ++counter;
+                            if (counter == totalCount) {
+                                resolve(result);
+                            } else {
+                                setTimeout(generator, 0, counter);
+                            }
+                        }
+
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                setTimeout(generator, 0, 0)
+            } catch (error) {
+                reject(error);
+            }    
+        });
+        
+    }
+
+    public swap(arr1, index1, arr2, index2) {
+        const value = arr1[index1];
+        arr1[index1] = arr2[index2];
+        arr2[index2] = value;
+        if (arr1 === arr2) {
+            return arr1;
+            }
+        return [arr1, arr2];
+    }
+
     static getInstance() {
         let instance = globalThis.SERVER.getSingletonInstance(UtilsService.name);
         if (!instance) {
