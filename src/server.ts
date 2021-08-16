@@ -81,8 +81,9 @@ export default class Server {
     }
 
     startServer() {
-        process.env.PORT = '4500';
-        this._serverInstance = this.APP.listen(process.env.PORT, () => console.log(`Server (${this.ENV}) started at port ${process.env.PORT}. Process id ${process.pid} and Parent process id ${process.ppid}`));
+      //  process.env.PORT = '4500';
+      const PORT = (process.env.PORT || 4500);
+        this._serverInstance = this.APP.listen(PORT, () => console.log(`Server (${this.ENV}) started at port ${PORT}. Process id ${process.pid} and Parent process id ${process.ppid}`));
        // this._displayServerInfo();
     }
 
