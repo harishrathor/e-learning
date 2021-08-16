@@ -12,4 +12,4 @@ RUN npm install
 #RUN npm run remove-dist
 RUN npm run build
 CMD npm run start-prod
-EXPOSE 4400
+EXPOSE 4500
