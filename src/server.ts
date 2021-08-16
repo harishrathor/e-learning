@@ -21,7 +21,6 @@ export default class Server {
         this.ENV = env;
     }
 
-
     initialize() {
         this.SingletonInstances = {};
         this.PATHS = PATHS;
