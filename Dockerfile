@@ -4,7 +4,7 @@ WORKDIR /app
 COPY .env-cmdrc /app
 COPY package*.json /app
 COPY tsconfig.json /app
-COPY src /app/src
+COPY src /app/src/
 #RUN ls -a
 #RUN npm install -g typescript
 #RUN npm install -g tsc
