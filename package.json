@@ -14,7 +14,8 @@
         "docker-run": "docker run -it -p 4500:4500 e-learning-app-harish",
         "aws-login": "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 552589618655.dkr.ecr.ap-south-1.amazonaws.com",
         "aws-tag-image": "docker tag e-learning-app-harish:latest 552589618655.dkr.ecr.ap-south-1.amazonaws.com/e-learning:latest",
-        "aws-push-image": "docker push 552589618655.dkr.ecr.ap-south-1.amazonaws.com/e-learning:latest"
+        "aws-push-image": "docker push 552589618655.dkr.ecr.ap-south-1.amazonaws.com/e-learning:latest",
+        "heroku-deploy": "git push heroku master"
     },
     "repository": {
         "type": "git",
