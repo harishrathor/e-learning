@@ -2,7 +2,7 @@ FROM node:12.0.0
 
 WORKDIR /app
 COPY .env-cmdrc /app
-COPY package*.json /app
+COPY package*.json /app/
 COPY tsconfig.json /app
 COPY src /app/src/
 #RUN ls -a
