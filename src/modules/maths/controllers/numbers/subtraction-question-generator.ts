@@ -16,19 +16,46 @@ interface SubtNumbers {
 
 export default class SubtractionQuestionGeneratorController extends core.exported.BaseController {
 
+
+    protected _generatePair(minuedLength: number, subtrahendLength: number, hasBorrowing: boolean) {
+        if (hasBorrowing == true) {
+            return numberGenerator.generateNumberPairWithBorrowingProperty(minuedLength, subtrahendLength);
+        } else {
+            return numberGenerator.generateNumberPairWithoutBorrowingProperty(minuedLength, subtrahendLength);
+        }
+    }
+
+    protected _makeQuestionDataWithOptions(minued: number, subtrahend: number): Promise<SubtNumbers> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const correctAnswer = minued - subtrahend;
+                const options =  await utilsService.generateSimilarNumbers(correctAnswer, 3);
+                options.push(correctAnswer);
+                const randomIndex = utilsService.getRandomInt(0, 3);
+                utilsService.swap(options, randomIndex, options, options.length - 1);
+                const questionData: SubtNumbers = {
+                    minued,
+                    subtrahend,
+                    correctAnswer,
+                    options
+                };
+                resolve(questionData);
+            } catch (error) {
+                return reject(error);
+            }
+            
+        });
+    }
+
     async generateNumbers(minuedLength: number, subtrahendLength: number, hasBorrowing: boolean, totalCount: number ): Promise<SubtNumbers[]> {
         return new Promise((resolve, reject) => {
             try {
                 const result = [];
                 const map = {};
-                const generator = counter => {
+                const generator = async (counter) => {
                     let data;
                     try {
-                        if (hasBorrowing == true) {
-                            data = numberGenerator.generateNumberPairWithBorrowingProperty(minuedLength, subtrahendLength);
-                        } else {
-                            data = numberGenerator.generateNumberPairWithoutBorrowingProperty(minuedLength, subtrahendLength);
-                        }
+                        data = this._generatePair(minuedLength, subtrahendLength, hasBorrowing);
                     } catch(error) {
                         reject(error);
                         return;
@@ -44,20 +71,8 @@ export default class SubtractionQuestionGeneratorController extends core.exporte
                             map[minued] = {};
                         }
                         map[minued][subtrahend] = 1;
-                        (async () => {
                             try {
-                                const correctAnswer = minued - subtrahend;
-                              //  console.log('gen', data, correctAnswer);
-                                const options =  await utilsService.generateSimilarNumbers(correctAnswer, 3);
-                                options.push(correctAnswer);
-                                const randomIndex = utilsService.getRandomInt(0, 3);
-                                utilsService.swap(options, randomIndex, options, options.length - 1);
-                                const questionData: SubtNumbers = {
-                                    minued,
-                                    subtrahend,
-                                    correctAnswer,
-                                    options
-                                };
+                                const questionData = await this._makeQuestionDataWithOptions(minued, subtrahend);
                                 result.push(questionData);
                                 ++counter;
                                 if (counter == totalCount) {
@@ -69,7 +84,6 @@ export default class SubtractionQuestionGeneratorController extends core.exporte
                                 reject(error);
                                 console.log(error);
                             }
-                        })();
                     }
                 };
                 setTimeout(generator, 0, 0)

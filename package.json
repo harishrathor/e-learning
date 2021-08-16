@@ -5,11 +5,13 @@
     "main": "./src/index.ts",
     "scripts": {
         "start": "env-cmd -e development ts-node-dev --respawn src/index.ts ",
-        "start-prod": "ls -l && pwd && env-cmd -e production nodemon dist/index.js",
-        "remove-dist": "if [ -d dist ]; then rm -rf dist; else echo 'dist does not exist'; fi",
+        "start-prod": "node dist/index.js production",
+        "remove-dist": "#!/bin/bash\nif [ -d dist ]; then rm -rf dist; else echo 'dist does not exist'; fi",
         "build": "tsc",
         "pwd": "pwd",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "docker-build": "docker build -t e-learning .",
+        "docker-run": "docker run -it -p 4500:4500 e-learning "
     },
     "repository": {
         "type": "git",

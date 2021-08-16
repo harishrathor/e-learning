@@ -1,5 +1,3 @@
-
-
 import  express from 'express';
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -12,21 +10,22 @@ import PATHS from './paths'
 export default class Server {
 
     public PATHS: ObjectType | undefined;
-    public ENV: any;
+    public ENV: string;
     public CONFIGS: ObjectType;
     public APP: express.Application;
     public SingletonInstances: ObjectType;
 
     protected _serverInstance: any;
 
-    constructor() {
+    constructor(env: string) {
+        this.ENV = env;
     }
+
 
     initialize() {
         this.SingletonInstances = {};
         this.PATHS = PATHS;
         this.APP = express();
-        this.ENV = process.env.NODE_ENV;
         this._registerMiddlwares();
         this._initRouting();
     }
@@ -83,8 +82,9 @@ export default class Server {
     }
 
     startServer() {
+        process.env.PORT = '4500';
         this._serverInstance = this.APP.listen(process.env.PORT, () => console.log(`Server (${this.ENV}) started at port ${process.env.PORT}. Process id ${process.pid} and Parent process id ${process.ppid}`));
-        this._displayServerInfo();
+       // this._displayServerInfo();
     }
 
     stopServer() {
