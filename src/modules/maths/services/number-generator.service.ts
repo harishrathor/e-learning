@@ -7,11 +7,11 @@ export default class NumberGeneratorService {
 
     public generateNumberPairWithBorrowingProperty(minuedLength, subterhandLength) {
         if (subterhandLength > minuedLength) {
-            throw new Error('Subtrhend lenght can not be greather than minued length');
+            throw new Error('Subtrhend lenght can not be greather than minuend length');
         }
         const E = UtilsService.E;
-        const minued = utilsService.getRandomInt(E[minuedLength - 1], E[minuedLength]);
-        const minuedNumberStr = minued.toString();
+        const minuend = utilsService.getRandomInt(E[minuedLength - 1], E[minuedLength]);
+        const minuedNumberStr = minuend.toString();
         let min, max, firstDigit;
         if (subterhandLength < minuedLength) {
             min = minuedNumberStr.substr(minuedLength - subterhandLength, subterhandLength);
@@ -30,18 +30,18 @@ export default class NumberGeneratorService {
 
         }
         return {
-            minued,
+            minuend,
             subtrahend
         };
     }
 
     public generateNumberPairWithoutBorrowingProperty(minuedLength, subterhandLength) {
         if (subterhandLength > minuedLength) {
-            throw new Error('Subtrhend lenght can not be greather than minued length');
+            throw new Error('Subtrhend lenght can not be greather than minuend length');
         }
         const E = UtilsService.E;
-        const minued = utilsService.getRandomInt(E[minuedLength - 1], E[minuedLength]);
-        const minuedNumberStr = minued.toString();
+        const minuend = utilsService.getRandomInt(E[minuedLength - 1], E[minuedLength]);
+        const minuedNumberStr = minuend.toString();
         let i = minuedLength - 1, subthNumberStr = '';
         let minIndex = (minuedLength - subterhandLength);
         while (i >= minIndex) {
@@ -55,11 +55,10 @@ export default class NumberGeneratorService {
         }
         const subtrahend = Number(subthNumberStr);
         return {
-            minued,
+            minuend,
             subtrahend
         };
     }
-
 
     static getInstance() {
         let instance = globalThis.SERVER.getSingletonInstance(NumberGeneratorService.name);

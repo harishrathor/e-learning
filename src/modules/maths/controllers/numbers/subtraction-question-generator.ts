@@ -8,7 +8,7 @@ const numberGenerator = NumberGeneratorService.getInstance();
 const utilsService = UtilsService.getInstance();
 
 interface SubtNumbers {
-    minued: number;
+    minuend: number;
     subtrahend: number;
     correctAnswer: number;
     options: number[];
@@ -25,16 +25,16 @@ export default class SubtractionQuestionGeneratorController extends core.exporte
         }
     }
 
-    protected _makeQuestionDataWithOptions(minued: number, subtrahend: number): Promise<SubtNumbers> {
+    protected _makeQuestionDataWithOptions(minuend: number, subtrahend: number): Promise<SubtNumbers> {
         return new Promise(async (resolve, reject) => {
             try {
-                const correctAnswer = minued - subtrahend;
+                const correctAnswer = minuend - subtrahend;
                 const options =  await utilsService.generateSimilarNumbers(correctAnswer, 3);
                 options.push(correctAnswer);
                 const randomIndex = utilsService.getRandomInt(0, 3);
                 utilsService.swap(options, randomIndex, options, options.length - 1);
                 const questionData: SubtNumbers = {
-                    minued,
+                    minuend,
                     subtrahend,
                     correctAnswer,
                     options
@@ -47,6 +47,14 @@ export default class SubtractionQuestionGeneratorController extends core.exporte
         });
     }
 
+    /**
+     * 
+     * @param minuedLength number
+     * @param subtrahendLength number
+     * @param hasBorrowing number
+     * @param totalCount number
+     * @returns SubtNumbers[]
+     */
     async generateNumbers(minuedLength: number, subtrahendLength: number, hasBorrowing: boolean, totalCount: number ): Promise<SubtNumbers[]> {
         return new Promise((resolve, reject) => {
             try {
@@ -60,30 +68,29 @@ export default class SubtractionQuestionGeneratorController extends core.exporte
                         reject(error);
                         return;
                     }
-                    const minued = data.minued;
+                    const minuend = data.minuend;
                     const subtrahend = data.subtrahend;
-                    //@ToDo: Calls may go forever
-                    if (minued == subtrahend || (map[minued] && map[minued][subtrahend])) {
-                      //  console.log('Repeat or Equal', minued, subtrahend);
+                    //@ToDo: Calls may go forever for invalid input
+                    if (minuend == subtrahend || (map[minuend] && map[minuend][subtrahend])) {
                         setTimeout(generator, 0, counter);
                     } else {
-                        if (!map[minued]) {
-                            map[minued] = {};
+                        if (!map[minuend]) {
+                            map[minuend] = {};
                         }
-                        map[minued][subtrahend] = 1;
-                            try {
-                                const questionData = await this._makeQuestionDataWithOptions(minued, subtrahend);
-                                result.push(questionData);
-                                ++counter;
-                                if (counter == totalCount) {
-                                    setTimeout(resolve, 0, result);
-                                } else {
-                                    setTimeout(generator, 0, counter);
-                                }
-                            } catch (error) {
-                                reject(error);
-                                console.log(error);
+                        map[minuend][subtrahend] = 1;
+                        try {
+                            const questionData = await this._makeQuestionDataWithOptions(minuend, subtrahend);
+                            result.push(questionData);
+                            ++counter;
+                            if (counter == totalCount) {
+                                setTimeout(resolve, 0, result);
+                            } else {
+                                setTimeout(generator, 0, counter);
                             }
+                        } catch (error) {
+                            reject(error);
+                            console.log(error);
+                        }
                     }
                 };
                 setTimeout(generator, 0, 0)

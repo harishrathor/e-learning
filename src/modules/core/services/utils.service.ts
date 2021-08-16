@@ -59,7 +59,7 @@ export default class UtilsService {
                 const generator = counter => {
                     try {
                         let coinResult = this.flipCoin(), min = 1, max = 9;
-                        let randIndex = this.getRandomInt(0, nStr.length);//parseInt((nStr.length / 2).toString())
+                        let randIndex = this.getRandomInt(0, nStr.length);
                         let refValue = Number(nStr[randIndex]);
                         if (nStr.length >= 3) {
                             let minIn = 1;
@@ -71,7 +71,6 @@ export default class UtilsService {
                             if (randIndex == 0) {
                                 if (coinResult) { //Add
                                     if (refValue == 9) {//Re-try
-                                     //   console.log('generateSimilarNumbers', 're-try', 1);
                                         return setTimeout(generator, 0, counter);
                                     } else {
                                         max = 9 - refValue;
@@ -84,7 +83,6 @@ export default class UtilsService {
                             } else  {
                                 if (coinResult) { //Add
                                     if (refValue == 9) {//Re-try
-                                      //  console.log('generateSimilarNumbers', 're-try', 2);
                                         return setTimeout(generator, 0, counter);
                                     } else {
                                         max = 9 - refValue;
@@ -92,7 +90,6 @@ export default class UtilsService {
                                     }
                                 } else {//Subtract
                                     if (refValue == 0) {//Re-try
-                                     //   console.log('generateSimilarNumbers', 're-try3==>', n, counter + 1,  randIndex, refValue, min, max);
                                         return setTimeout(generator, 0, counter);
                                     } else {
                                         min = 1;
@@ -112,10 +109,8 @@ export default class UtilsService {
                             newNumber = n - randomNumber;
                         }
                         if (map[newNumber] || newNumber < 0) {//Re-try
-                           // console.log('generateSimilarNumbers', 're-try4-->', n, counter + 1,  randIndex, refValue, min, max, newNumber);
                             setTimeout(generator, 0, counter);
                         } else {
-                            //console.log('Generated Option: ', n, counter + 1,  randIndex, refValue, min, max, newNumber);
                             map[newNumber] = 1;
                             result.push(newNumber);
                             ++counter;
